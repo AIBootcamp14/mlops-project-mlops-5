@@ -1,16 +1,19 @@
 import math
-
+import sys
 import numpy as np
 
 
 class SimpleDataLoader:
-    def __init__(self, features, labels, batch_size=16, shuffle=True):
+    def __init__(self, features, labels, logger, batch_size=16, shuffle=True):
+        self.logger = logger
         self.features = features
         self.labels = labels
         self.batch_size = batch_size
         self.shuffle = shuffle
         self.num_samples = len(features)
         self.indices = np.arange(self.num_samples)
+        #DataLoader 초기화 로그 메세지
+        self.logger.write(f"SimpleDataLoader initialized with {self.num_samples} samples, batch_size={self.batch_size}, shuffle={self.shuffle}.")
 
     def __iter__(self):
         if self.shuffle:

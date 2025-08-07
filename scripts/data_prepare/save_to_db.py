@@ -5,9 +5,11 @@ import csv
 import pandas as pd
 
 from dotenv import load_dotenv
+from datetime import datetime  
 from io import StringIO
+from datetime import datetime
 from scripts.utils.utils import project_path
-
+from scripts.utils.logger import Logger
 
 # --- 환경 변수 파일 경로 설정 ---
 env_path = os.path.join(project_path(), '.env')
@@ -24,17 +26,25 @@ DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "root")
 
 
-def save_csv_to_db_main_function(csv_path):
-    print(f"\n--- 시청 로그 데이터를 DB에 저장 시작 ---")
+def save_csv_to_db_main_function(csv_path,logger=None):
+    # 로거 없을 경우 생성해서 사용
+    if logger is None:
+        log_dir = os.path.join(project_path(), os.getenv("LOGS_SCRIPTS_DIR"))
+        log_filename = datetime.now().strftime('db_ingestion_%Y%m%d_%H%M%S.log')
+        log_file_path = os.path.join(log_dir, log_filename)
+        logger = Logger(log_file_path, print_also=True)
+
     conn = None
     cur = None
     try:
+        logger.write(f"\n--- 시청 로그 데이터를 DB에 저장 시작 ---")
+
         if not os.path.exists(csv_path):
-            print(f"오류: CSV 파일 '{csv_path}'을(를) 찾을 수 없습니다.")
+            logger.write(f"오류: CSV 파일 '{csv_path}'을(를) 찾을 수 없습니다.", print_error=True)
             return
 
         df = pd.read_csv(csv_path)
-        print(f"'{csv_path}' 파일에서 {len(df)}개의 레코드를 읽었습니다.")
+        logger.write(f"'{csv_path}' 파일에서 {len(df)}개의 레코드를 읽었습니다.")
 
         conn = psycopg2.connect(
             host=DB_HOST,
@@ -55,7 +65,7 @@ def save_csv_to_db_main_function(csv_path):
                 title TEXT,
                 original_title TEXT,
                 overview TEXT,
-                release_date DATE,
+                release_date TEXT,
                 genre_ids TEXT,
                 original_language TEXT,
                 backdrop_path TEXT,
@@ -68,7 +78,7 @@ def save_csv_to_db_main_function(csv_path):
             );
         """)
         conn.commit()
-        print("테이블 'watch_logs' 확인 또는 생성 완료.")
+        logger.write("테이블 'watch_logs' 확인 또는 생성 완료.")
 
         buffer = StringIO()
         df.to_csv(
@@ -77,7 +87,7 @@ def save_csv_to_db_main_function(csv_path):
             header=False,
             sep=',',
             quotechar='"',
-            quoting=csv.QUOTE_ALL
+            quoting=csv.QUOTE_ALL,
         )
         buffer.seek(0)
 
@@ -90,24 +100,24 @@ def save_csv_to_db_main_function(csv_path):
 
         copy_sql = f"""
         COPY watch_logs ({', '.join(csv_columns)})
-        FROM STDIN WITH (FORMAT CSV, HEADER FALSE, DELIMITER ',', QUOTE '"');
+        FROM STDIN WITH (FORMAT CSV, HEADER FALSE, DELIMITER ',', QUOTE '"', NULL '');
         """
         cur.copy_expert(copy_sql, buffer)
 
         conn.commit()
-        print(f"총 {len(df)}개의 시청 로그 데이터가 'watch_logs' 테이블에 성공적으로 저장되었습니다.")
+        logger.write(f"총 {len(df)}개의 시청 로그 데이터가 'watch_logs' 테이블에 성공적으로 저장되었습니다.")
 
     except psycopg2.Error as db_err:
-        print(f"데이터베이스 오류 발생: {db_err}")
+        logger.write(f"데이터베이스 오류 발생: {db_err}")
         if conn:
             conn.rollback()
     except pd.errors.EmptyDataError:
-        print(f"오류: '{csv_path}' 파일이 비어 있습니다.")
+        logger.write(f"오류: '{csv_path}' 파일이 비어 있습니다.")
     except Exception as e:
-        print(f"알 수 없는 오류 발생: {e}")
+        logger.write(f"알 수 없는 오류 발생: {e}")
     finally:
         if cur:
             cur.close()
         if conn:
             conn.close()
-        print(f"--- 시청 로그 데이터를 DB에 저장 종료 ---")
+        logger.write(f"--- 시청 로그 데이터를 DB에 저장 종료 ---")

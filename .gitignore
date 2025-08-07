@@ -100,6 +100,7 @@ celerybeat-schedule.*
 # Environments
 .env
 .venv
+.venv*
 env/
 venv/
 ENV/
@@ -153,8 +154,29 @@ __pycache__/  # Python cache files
 nosetests.xml # Test results
 *.log         # Log files
 
+### react ###
+.DS_*
+logs
+**/*.backup.*
+**/*.back.*
+
+node_modules
+bower_components
+
+*.sublime*
+
+psd
+thumb
+sketch
+
 # Other folders
 projects/
 
-./logs/*
-./.paths/*
+# logs 폴더를 무시하지 않게 하려면
+!logs/
+!logs/**
+
+
+./paths/*.env
+
+env.js
