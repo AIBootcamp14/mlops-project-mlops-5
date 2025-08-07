@@ -18,8 +18,8 @@ export PROJECT_ROOT=$PROJECT_ROOT
 # echo "PROJECT_ROOT=$PROJECT_ROOT"
 # echo "COMPOSE_FILE_PATH=$COMPOSE_FILE_PATH"
 
-if [ -z "$SERVER_2_IP" ]; then
-  echo "❌ SERVER_2_IP 환경변수가 설정되지 않았습니다."
+if [ -z "$MONITORING_SERVER_IP" ]; then
+  echo "❌ MONITORING_SERVER_IP 환경변수가 설정되지 않았습니다."
   exit 1
 fi
 

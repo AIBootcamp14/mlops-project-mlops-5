@@ -30,8 +30,13 @@ COMPOSE_FILE_PATH=$(realpath "${PROJECT_ROOT}/${SERVICES_MONITORING_INFRA}/docke
 
 
 # prometheus, alertmanager 환경 설정 yml 파일 생성
-if [ -z "$SERVER_1_IP" ]; then
-  echo "❌ SERVER_1_IP 환경변수가 설정되지 않았습니다."
+if [ -z "$WORKHORSE_IP" ]; then
+  echo "❌ WORKHORSE_IP 환경변수가 설정되지 않았습니다."
+  exit 1
+fi
+
+if [ -z "$CONTROLTOWER_IP" ]; then
+  echo "❌ CONTROLTOWER_IP 환경변수가 설정되지 않았습니다."
   exit 1
 fi
 

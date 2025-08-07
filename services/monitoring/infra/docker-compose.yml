@@ -47,6 +47,26 @@ services:
     networks:
       - monitoring-network
 
+  # 모니터링 서버 상태 확인을 위한 node-exporter
+  node-exporter:
+    image: prom/node-exporter:v1.8.1
+    container_name: node-exporter
+    restart: always
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)'
+    # 로컬 테스트
+    networks:
+      - monitoring-network
+
 networks:
   monitoring-network:
     external: true
