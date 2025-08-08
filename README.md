@@ -134,7 +134,59 @@
 
 ## **7. Appendix**
 
-### **7.1 설치 및 실행 방법 (간략화)**
+### **7.1 프로젝트 구조**
+
+```bash
+mlops-project-mlops-5/
+├── dags/                            # [Airflow DAG 자동화 (오케스트레이션 서버, Airflow)]
+│
+├── data/                            # [데이터 파일 저장 (공통 마운트, 모든 서버에서 접근)]
+│   ├── raw/                         # [원본 데이터 (데이터 수집 서버, 크롤러 컨테이너)]
+│   └── processed/                   # [전처리/피처 데이터 (피처엔지니어링 서버, S3)]
+│
+├── docs/                            # [공식 문서 (팀 전체, PRD/설계/명세/가이드)]
+│
+├── frontend/                        # [사용자 영화 추천 페이지(React/FastAPI)]
+│
+├── logs/                            # [운영/실행/모니터링 로그 (각 서버/컨테이너 생성)]
+│   ├── airflow/                     # [Airflow 실힘 로그(자동화 파이프라인 서버)]
+│   ├── docker-services/             # [서버1, 서버2 실행된 각 도커 서비스 로그]
+│   ├── mlflow/                      # [MLflow 실험 로그 (ML 실험/모델링 서버)]
+│   └── scripts/                     # [스크립트 실행 로그 (전체 파이프라인)]
+│
+├── models/                          # [학습된 모델/체크포인트 (모델링 서버, MLflow/서빙 컨테이너)]
+│   └── checkpoints/                 # [중간 저장, 에폭별 체크포인트]
+│
+├── scripts/                         # [파이프라인 실행/로직 (각 서버/컨테이너별 사용)]
+│   ├── data_prepare/                # [데이터 전처리 및 준비 코드]
+│   ├── dataset/                     # [데이터셋 관련 코드 및 관리]
+│   ├── evaluate/                    # [모델 평가 관련 코드]
+│   ├── inference/                   # [모델 추론 코드]
+│   ├── log/                         # [스크립트 실행 시 생성되는 로그 관리]
+│   ├── model/                       # [모델 정의 및 저장 관련 코드]
+│   ├── monitoring/                  # [서버/모델 모니터링 관련 코드]
+│   ├── postprocess/                 # [후처리 작업 코드]
+│   ├── train/                       # [모델 학습 코드]
+│   └── utils/                       # [공통 유틸리티 함수/모듈]
+│
+├── services/                        # [컨테이너 서비스/도커/컴포즈 (각 서버/파트 담당)]
+│   ├── api/                         # [API 서버 관련 서비스]
+│   ├── frontend/                    # [프론트엔드 서비스 (React 등)]
+│   ├── model_inference/             # [모델 서빙/추론 서비스]
+│   └── monitoring/                  # [모니터링 및 운영 상태 관리 서비스]
+│
+├── .paths/                          # [경로(alias) 관리 전용 디렉토리 (공통, 모든 서버)]
+│   └── paths.env                    # [alias 환경변수 파일 예시, 예: DATA_RAW=~/mlops-project/data/raw]
+│
+├── .env                             # [환경 변수 파일 (공통, 모든 서버)]
+├── .gitignore                       # [Git 추적 제외 목록 (공통)]
+├── docker-compose.yml               # [전체 서비스/컨테이너 오케스트레이션]
+├── README.md                        # [프로젝트 설명/가이드]
+└── requirements.txt                 # [파이썬 의존성 명세 (공통)]
+
+```
+
+### **7.2설치 및 실행 방법 (간략화)**
 
 1. **필수 라이브러리 설치:**
     
@@ -185,15 +237,74 @@
         ```
         
 3. **웹페이지 접속:**
-    - 서버1
+    - 서버1: 사용자 페이지
         - 사용자 영화 추천 페이지: http://<서버1 IP>:3000/
         - FastAPI: http://<서버1 IP>:3000/
-    - 서버2
+    - 서버2: Airflow Dag 파이프라인 자동화 실행
         - Airflow: http://<서버2 IP>:8080/
-    - 서버3
+    - 서버3 : 모니터링
         - Grafana: http://<서버3 IP>:3000
 
 ### **7.2 실행 결과**
+
+- 데이터 수집, 전처리 및 저장
+    - 전처리 데이터 저장
+        
+        ⚬로컬 저장: 로그 및 디버깅용
+        
+        ⚬PostgreSQL DB 저장: 학습 및 API 연동을 위한 정형 데이터베이스로 활용
+        
+        ⚬S3 업로드: 장기 보관 및 백업 용도
+        
+    
+    <img width="1401" height="501" alt="7" src="https://github.com/user-attachments/assets/deb08dc1-135d-4f45-928c-03cf8cdce154" />
+
+    
+    <img width="1335" height="675" alt="8" src="https://github.com/user-attachments/assets/e311380c-5ecd-4c30-a817-af1c00f0abe9" />
+
+    
+- 모델 학습 및 추론 결과 저장
+    
+    <img width="879" height="648" alt="9" src="https://github.com/user-attachments/assets/718ef19e-63bb-4203-a591-6419ecaf3314" />
+
+    
+- 모델 학습 및 추론 결과 저장
+    
+    <img width="1110" height="473" alt="10" src="https://github.com/user-attachments/assets/54c3441a-6283-4829-bac3-7246da2b5049" />
+
+    
+    <img width="1110" height="787" alt="11" src="https://github.com/user-attachments/assets/42bf0c94-81ef-4e00-97cd-1091b5ea9387" />
+
+    
+    <img width="1273" height="621" alt="12" src="https://github.com/user-attachments/assets/3e587291-ca2c-4f4e-bce7-ef2420b69e44" />
+
+    
+- 모델 학습 및 추론 결과 저장
+    
+    <img width="895" height="766" alt="13" src="https://github.com/user-attachments/assets/a8393f2e-65dd-4e25-99f0-584cbeee0e5b" />
+
+    
+    <img width="1497" height="756" alt="14" src="https://github.com/user-attachments/assets/3482b46d-9188-49f7-9cf5-557d8cc9cfd7" />
+
+    
+    - 모델 배포
+        - 학습된 추천 모델을 API로 서빙하고, 프론트엔드에서 추천 결과를 실시간으로 시각화
+            
+            ⚬ FastAPI 서버: 가벼우면서도 비동기 처리가 가능해 실시간 API 서버로 적합
+            
+            ⚬ React 프론트엔드: 사용자 인터랙션 처리 및 컴포넌트 기반 UI 구성에 유리
+            
+        - 주요 FastAPI 엔드포인트
+    
+    | Method | Endpoint | 설명 |
+    | --- | --- | --- |
+    | GET | /available-content-ids | 추천 가능한(학습된) 콘텐츠 ID 목록 조회 |
+    | GET | /available-contents | 추천 가능한(학습된) 콘텐츠 ID, 제목, 포스터 조회 |
+    | GET | /latest-recommendations?k=10 | 가장 최근 추천 결과 k개 조회 (기본 10개, 중복은 제거됨)
+    > React 프론트엔드에 표시되는 값
+    > 콘텐츠 ID, 제목, 포스터, 줄거리 조회 |
+    | POST | /predict | 단일 사용자 입력에 대한 콘텐츠 추천
+    > latest-recommendations 값에 업데이트되어 React 프론트엔드에서 새롭게 업데이트 |
 
 ### **7.3 한계 및 회고**
 
