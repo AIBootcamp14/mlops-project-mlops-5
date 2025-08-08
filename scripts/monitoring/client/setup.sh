@@ -6,6 +6,12 @@
 CURRENT_DIR=$(dirname "$0")
 PROJECT_ROOT=$(realpath "$CURRENT_DIR/../../..")
 
+# 기존 경로 계산 코드 아래에 추가
+ENV_FILE="$PROJECT_ROOT/.env"
+if [ -f "$ENV_FILE" ]; then
+  source "$ENV_FILE"
+fi
+
 # env 파일 로드
 source "$PROJECT_ROOT/.paths/paths.env"
 
@@ -37,6 +43,9 @@ PROMTAIL_CONFIG_FILE_PATH=$(realpath "${PROJECT_ROOT}/${SERVICES_MONITORING_CLIE
 # echo "PROMTAIL_CONFIG_FILE_PATH=$PROMTAIL_CONFIG_FILE_PATH"
 
 envsubst < $PROMTAIL_CONFIG_TPL_FILE_PATH > $PROMTAIL_CONFIG_FILE_PATH
+
+# monitoring-network 네트워크가 없으면 생성
+docker network inspect monitoring-network >/dev/null 2>&1 || docker network create monitoring-network
 
 # docker compose 실행 --build 옵션이 없으면 원격 저장소 docker를 먼저 pull 받게 된다
 docker compose -f $COMPOSE_FILE_PATH up --build -d

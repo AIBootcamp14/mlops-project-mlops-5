@@ -9,6 +9,12 @@ export HOME_DIR=/home/ubuntu
 CURRENT_DIR=$(dirname "$0")
 PROJECT_ROOT=$(realpath "$CURRENT_DIR/../../..")
 
+# 기존 경로 계산 코드 아래에 추가
+ENV_FILE="$PROJECT_ROOT/.env"
+if [ -f "$ENV_FILE" ]; then
+  source "$ENV_FILE"
+fi
+
 # env 파일 로드
 source "$PROJECT_ROOT/.paths/paths.env"
 
@@ -88,6 +94,9 @@ ALERTMANAGER_CONFIG_FILE_PATH=$(realpath "${PROJECT_ROOT}/${SERVICES_MONITORING_
 
 # echo "ALERTMANAGER_CONFIG_TPL_FILE_PATH=$ALERTMANAGER_CONFIG_TPL_FILE_PATH"
 # echo "ALERTMANAGER_CONFIG_FILE_PATH=$ALERTMANAGER_CONFIG_FILE_PATH"
+
+# monitoring-network 네트워크가 없으면 생성
+docker network inspect monitoring-network >/dev/null 2>&1 || docker network create monitoring-network
 
 envsubst < $ALERTMANAGER_CONFIG_TPL_FILE_PATH > $ALERTMANAGER_CONFIG_FILE_PATH
 
