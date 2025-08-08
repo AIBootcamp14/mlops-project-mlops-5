@@ -100,6 +100,7 @@ celerybeat-schedule.*
 # Environments
 .env
 .venv
+.venv*
 env/
 venv/
 ENV/
@@ -153,18 +154,29 @@ __pycache__/  # Python cache files
 nosetests.xml # Test results
 *.log         # Log files
 
+### react ###
+.DS_*
+logs
+**/*.backup.*
+**/*.back.*
+
+node_modules
+bower_components
+
+*.sublime*
+
+psd
+thumb
+sketch
+
 # Other folders
 projects/
 
-<<<<<<< HEAD
+# .env 파일
+./paths/*.env
+env.js
+.env
 
-# 전체 디렉토리 경로 환경 변수 설정 .env 파일
-.paths/*
-
-# User Add
-# !./mlops-project/logs/*
-!./mlops-project/services/*
-=======
-./logs/*
-./.paths/*
->>>>>>> server-workhorse-de-fe-ds-ml
+# logs 폴더를 무시하지 않게 하려면
+!logs/
+!logs/**
