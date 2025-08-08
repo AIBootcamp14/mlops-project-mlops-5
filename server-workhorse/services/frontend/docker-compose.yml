@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  my-mlops-frontend:
+    build:
+      context: ../../
+      dockerfile: services/frontend/Dockerfile
+    image: jkim1209/mlops-frontend:1.2.0
+    container_name: my-mlops-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - my-mlops-api
+    networks:
+      - my-mlops-network
+    volumes:
+      - ./env.js:/usr/share/nginx/html/env.js
+
+networks:
+  my-mlops-network:
+    external: true
