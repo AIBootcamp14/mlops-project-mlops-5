@@ -1,8 +1,13 @@
 # **MLOps Project - Movie Prediction (Team 5, 3X+Y)**
 
 - **프로젝트 기간:** 2025.07.28 ~ 2025.08.08
-- **배포 링크:** http://15.164.236.229:3000/
+
 - **GitHub:** [3X+Y MLOps Project Team Repository](https://github.com/AIBootcamp14/mlops-project-mlops-5)
+
+- **React 배포 결과:**
+
+![react_main](https://github.com/user-attachments/assets/0341d28b-9d99-48b4-9c72-0cb27e38771f)
+> 링크(현재는 만료됨): http://15.164.236.229:3000/
 
 ---
 
@@ -77,6 +82,7 @@
     - Accuracy
     - Cross-Entropy Loss
 
+
 ---
 
 ## **4. 서비스 아키텍처**
@@ -126,7 +132,7 @@
 | 이름 | 역할 | GitHub | 담당 기능 요약 |
 | --- | --- | --- | --- |
 | **김선민** | 데이터 수집/적재 | https://github.com/nimnusmik | 팀 일정 관리, TMDB 데이터 크롤링, 가상유저 로그 생성, DB/S3 적재, 데이터 표준 스키마 설계, 데이터 전처리(피처 선택), SQL RDBMS |
-| **김장원** | 모델링/추론/배포 | https://github.com/jkim1209 | 데이터 분석, 경량 MLP 모델 구현, MLflow 실험, FastAPI/React API, 추론/배포 전체, 서비스별 도커 이미지 버전 관리 |
+| **김장원** | 모델링/추론/배포 | https://github.com/jkim1209 | 데이터 분석, 경량 MLP 모델 구현, MLflow 실험, FastAPI/React App, 추론/배포 전체, 서비스별 도커 이미지 버전 관리 |
 | **장윤정** | 모니터링/로깅 | https://github.com/yjjang06 | Prometheus/Grafana/Loki 환경 구축, 메트릭/로그 대시보드, Alert 규칙, 서버별 클라이언트/관리자 인프라 구현 |
 | **최현화** | 인프라/통합/운영 | https://github.com/iejob | 공통 인프라/보안(Docker, pyenv, UFW, SSH 등), 서버별 툴 설치, 개발환경 표준화, FastAPI/Airflow Dag 자동화 파이프라인, 서버 1,2 연동, 모니터링 클라이언트 적용, GitHub 팀레포 브랜치 관리자 |
 
@@ -146,7 +152,7 @@ mlops-project-mlops-5/
 │
 ├── docs/                            # [공식 문서 (팀 전체, PRD/설계/명세/가이드)]
 │
-├── frontend/                        # [사용자 영화 추천 페이지(React/FastAPI)]
+├── frontend/                        # [프론트엔드 폴더 (React)]
 │
 ├── logs/                            # [운영/실행/모니터링 로그 (각 서버/컨테이너 생성)]
 │   ├── airflow/                     # [Airflow 실힘 로그(자동화 파이프라인 서버)]
@@ -300,11 +306,12 @@ mlops-project-mlops-5/
     | --- | --- | --- |
     | GET | /available-content-ids | 추천 가능한(학습된) 콘텐츠 ID 목록 조회 |
     | GET | /available-contents | 추천 가능한(학습된) 콘텐츠 ID, 제목, 포스터 조회 |
-    | GET | /latest-recommendations?k=10 | 가장 최근 추천 결과 k개 조회 (기본 10개, 중복은 제거됨)
-    > React 프론트엔드에 표시되는 값
-    > 콘텐츠 ID, 제목, 포스터, 줄거리 조회 |
-    | POST | /predict | 단일 사용자 입력에 대한 콘텐츠 추천
-    > latest-recommendations 값에 업데이트되어 React 프론트엔드에서 새롭게 업데이트 |
+    | GET | /latest-recommendations?k=10 | 가장 최근 추천 결과 k개 조회 (기본 10개, 중복은 제거됨) <br> > React 프론트엔드에 표시되는 값 <br> > 콘텐츠 ID, 제목, 포스터, 줄거리 조회 |
+    | POST | /predict | 단일 사용자 입력에 대한 콘텐츠 추천 <br> > latest-recommendations 값에 업데이트되어 React 프론트엔드에서 새롭게 업데이트 |
+
+- React App 시연
+
+https://github.com/user-attachments/assets/df210b4e-fe9b-4954-95fc-d42d0cbe26b0
 
 ### **7.3 한계 및 회고**
 
