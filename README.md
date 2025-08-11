@@ -194,27 +194,6 @@ mlops-project-mlops-5/
 └── requirements.txt                 # [파이썬 의존성 명세 (공통)]
 
 ```
-
-### **7.2설치 및 실행 방법 (간략화)**
-
-1. **필수 라이브러리 설치:**
-    
-    ```bash
-    # 패키지 목록 업데이트
-    sudo apt update && sudo apt upgrade -y
-    
-    # Docker 및 Docker Compose + 필수 설치
-    sudo apt install -y curl wget git zip unzip htop vim tmux tree \
-      python3 python3-pip docker.io docker-compose \
-      ca-certificates software-properties-common build-essential net-tools
-    
-    # 현재 사용자에게 Docker 그룹 권한 추가 (로그아웃 후 다시 로그인해야 적용)
-    sudo usermod -aG docker $US
-    
-    # Docker 서비스 시작 및 부팅 시 자동 실행 설정
-    sudo systemctl start docker
-    sudo systemctl enable docker
-    ```
     
 ### **7.2설치 및 실행 방법 (간략화)**
 
