@@ -358,11 +358,8 @@ mlops-project-mlops-5/
     | --- | --- | --- |
     | GET | /available-content-ids | 추천 가능한(학습된) 콘텐츠 ID 목록 조회 |
     | GET | /available-contents | 추천 가능한(학습된) 콘텐츠 ID, 제목, 포스터 조회 |
-    | GET | /latest-recommendations?k=10 | 가장 최근 추천 결과 k개 조회 (기본 10개, 중복은 제거됨)
-    > React 프론트엔드에 표시되는 값
-    > 콘텐츠 ID, 제목, 포스터, 줄거리 조회 |
-    | POST | /predict | 단일 사용자 입력에 대한 콘텐츠 추천
-    > latest-recommendations 값에 업데이트되어 React 프론트엔드에서 새롭게 업데이트 |
+    | GET | /latest-recommendations?k=10 | 가장 최근 추천 결과 k개 조회 (기본 10개, 중복은 제거됨), React 프론트엔드에 표시되는 값 콘텐츠 ID, 제목, 포스터, 줄거리 조회 |
+    | POST | /predict | 단일 사용자 입력에 대한 콘텐츠 추천, latest-recommendations 값에 업데이트되어 React 프론트엔드에서 새롭게 업데이트 |
 
 - FastAPI & React
     -  http://15.164.236.229:8000/docs
