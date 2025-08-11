@@ -6,8 +6,11 @@
 
 - **React 배포 결과:**
 
-https://github.com/user-attachments/assets/df210b4e-fe9b-4954-95fc-d42d0cbe26b0
-> 링크(현재는 만료됨): http://15.164.236.229:3000/
+    - React App 시연
+
+        https://github.com/user-attachments/assets/df210b4e-fe9b-4954-95fc-d42d0cbe26b0
+
+    > 링크(현재는 만료됨): http://15.164.236.229:3000/
 
 ---
 
@@ -213,32 +216,68 @@ mlops-project-mlops-5/
     sudo systemctl enable docker
     ```
     
+### **7.2설치 및 실행 방법 (간략화)**
+
+1. **필수 라이브러리 설치:**
+    
+    ```bash
+    # 패키지 목록 업데이트
+    sudo apt update && sudo apt upgrade -y
+    
+    # Docker 및 Docker Compose + 필수 설치
+    sudo apt install -y curl wget git zip unzip htop vim tmux tree \
+      python3 python3-pip docker.io docker-compose \
+      ca-certificates software-properties-common build-essential net-tools
+    
+    # 현재 사용자에게 Docker 그룹 권한 추가 (로그아웃 후 다시 로그인해야 적용)
+    sudo usermod -aG docker $US
+    
+    # Docker 서비스 시작 및 부팅 시 자동 실행 설정
+    sudo systemctl start docker
+    sudo systemctl enable docker
+    ```
+    
 2. **Docker Compose 실행 (각 서버별)**
     - 서버 1
         
         ```bash
+        # 환경 변수 적용
         source .env
         source .paths/paths.env
         source frontend/.env
+        
+        # React frontend에서 필요한 env.js 파일 자동 생성하는 쉘 스크립트 실행
         scripts/utils/create_env_js.sh
+        
+        # 데이터 수집/전처링, 모델 학습/모델 추론에 필요한 모든 도커 서비스 실행
         docker compose build --no-cache && docker compose up -d
+        
+        # 모니터링 클라이언트에 필요한 모든 도커 클라이언트 서비스 실행하는 쉘 스크립트 실행
         bash ./scripts/monitoring/client/setup.sh
         ```
         
     - 서버 2
         
         ```bash
+        # 환경 변수 적용
         source .env
         source .paths/paths.env
+        
+        # Airflow Dag 자동화 파이프라인에 필요한 모든 도커 서비스 실행
         docker compose build --no-cache && docker compose up -d
+        
+        # 모니터링 클라이언트에 필요한 모든 도커 클라이언트 서비스 실행하는 쉘 스크립트 실행
         bash ./scripts/monitoring/client/setup.sh
         ```
         
     - 서버 3
         
         ```bash
+        # 환경 변수 적용
         source .env
         source .paths/paths.env
+        
+        # 모니터링 관리자에 필요한 모든 도커 클라이언트 서비스 실행하는 쉘 스크립트 실행
         bash ./scripts/monitoring/infra/setup.sh
         ```
         
@@ -480,6 +519,8 @@ mlops-project-mlops-5/
         
         <img width="2850" height="1620" alt="28" src="https://github.com/user-attachments/assets/8e5351f6-b936-4799-b51e-91d7a90bc37f" />
 
+
+
         
     - Node-Exporter
         - 서버의 하드웨어 및 OS 지표를 수집하여 Prometheus가 스크랩할 수 있는 형태로 변환
@@ -489,9 +530,7 @@ mlops-project-mlops-5/
 
 ### 7.4 최종 결과
 
-- React App 시연
-
-    ![react_main](https://github.com/user-attachments/assets/0341d28b-9d99-48b4-9c72-0cb27e38771f)
+![29](https://github.com/user-attachments/assets/225431d8-2324-4bc6-a4b1-01b7fddf60ef)
 
 ### **8. 한계 및 회고**
 
