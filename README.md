@@ -362,30 +362,26 @@ mlops-project-mlops-5/
     | POST | /predict | 단일 사용자 입력에 대한 콘텐츠 추천, latest-recommendations 값에 업데이트되어 React 프론트엔드에서 새롭게 업데이트 |
 
 - FastAPI & React
-    -  http://15.164.236.229:8000/docs
     
-        <img width="1381" height="694" alt="15" src="https://github.com/user-attachments/assets/4b79d843-193a-4e36-a3ff-389b104bafa1" />
+    ![0](https://github.com/user-attachments/assets/80bfc10e-5ee8-46d4-ad6d-e18dc6a98493)
 
     
     - 입력된 콘텐츠 특징을 바탕으로 유사한 콘텐츠를 예측하는 콘텐츠 기반 추천 시스템
-        
-        ⚬ 입력된 content_id, watch_seconds, rating, popularity 기반으로 API 서버에 탑재된 MLP 모델이 실시간 추론을 수행하고 사용자에게 유사 콘텐츠의 영화를 DB에서 조회하여 새롭게 추천
-        
-        ⚬ 이때 입력된 content_id는 기존에 학습된 콘텐츠 중 하나
-        
-        <img width="841" height="821" alt="16" src="https://github.com/user-attachments/assets/abb03f31-5f1a-40d0-86d5-a7d40965dda0" />
+        - 입력된 content_id, watch_seconds, rating, popularity 기반으로 API 서버에 탑재된 MLP 모델이 실시간 추론을 수행하고 사용자에게 유사 콘텐츠의 영화를 DB에서 조회하여 새롭게 추천
+            
+            <img width="1381" height="694" alt="15" src="https://github.com/user-attachments/assets/c89347ce-ebac-4e24-a528-6a67e987b20b" />
 
-        
-        <img width="1864" height="932" alt="17" src="https://github.com/user-attachments/assets/4bd6d1fc-e929-4309-b75b-5f0ef65704e9" />
+            
+            <img width="841" height="821" alt="16" src="https://github.com/user-attachments/assets/a66f65a0-f68b-4fee-89a8-04386c3f8937" />
 
-        
-    - 입력된 콘텐츠 특징을 바탕으로 유사한 콘텐츠를 예측하는 콘텐츠 기반 추천 시스템
-        
-        ⚬ 입력된 content_id, watch_seconds, rating, popularity 기반으로 API 서버에 탑재된 MLP 모델이 실시간 추론을 수행하고 사용자에게 유사 콘텐츠의 영화를 DB에서 조회하여 새롭게 추천
-        
-        ⚬ 이때 입력된 content_id는 기존에 학습된 콘텐츠 중 하나
-        
-        <img width="683" height="247" alt="18" src="https://github.com/user-attachments/assets/7ad3b29c-e074-4726-b06c-fcad16447fd9" />
+            
+            <img width="1864" height="932" alt="17" src="https://github.com/user-attachments/assets/d9a2f2a1-07fb-4c0d-bfa0-4b38ed13eb1f" />
+
+            
+        - 이때 입력된 content_id는 기존에 학습된 콘텐츠 중 하나
+            
+            <img width="683" height="247" alt="18" src="https://github.com/user-attachments/assets/1dad7660-9be8-4a2c-953a-e9749f56a3c3" />
+
 
         
 - Airflow 자동화 파이프라인
