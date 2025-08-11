@@ -137,7 +137,7 @@
 | **김선민** | 데이터 수집·생성·적재 및 스키마 설계 | https://github.com/nimnusmik | 팀 일정 관리, TMDB 데이터 크롤링, 가상 유저 생성 및 시청 로그 생성, DB/S3 적재, 데이터 전처리 및 표준 스키마 설계, PostgreSQL 적재, AWS S3 백업(.parquet 변환), SQL RDBMS 설계/관리, 데이터 처리 파이프라인 스크립트화, PPT 문서 제작 |
 | **김장원** | 모델링·추론·배포·API/프론트엔드 연동 | https://github.com/jkim1209 | 데이터 분석, Numpy 기반 경량 MLP 모델 구현, MLflow 실험, 모델 학습/추론/예, MLflow 실험·아티팩트 관리, 배치 추론 결과 저장(PostgreSQL/S3), FastAPI API 서버 구축(/available-contents, /latest-recommendations 등), React UI와 API 연동, 사용자 영화 추천 페이지 개발, PPT 문서 제작 |
 | **장윤정** | 모니터링·로깅·알림 | https://github.com/yjjang06 | Prometheus/Grafana/Loki 환경 구축, Node Exporter/Promtail 연동, 메트릭/로그 대시보드 제작, Alert 규칙 설정, 서버별 모니터링 클라이언트/관리자 기능 구현, [Error], [Warning] 로그 패턴 메트릭 변환, Slack 연동 에러 알림 |
-| **최현화** | 인프라 구축·API 서빙·파이프라인 자동화·레포 관리 | https://github.com/iejob | PRD 설계, 디렉토리 구조 설계, 공통 환경변수/.env 설정, AWS EC2 3대 공통 인프라 구축 , 보안(UFW, SSH, IAM/SG 등), 서버별 툴 설치, 개발환경 표준화,  Docker Compose 서비스 통합 관리,  Docker 서비스 환경변수 관리, 서비스 로그 관리 자동화, FastAPI 기능 추가(서버1), Airflow DAG 기반 파이프라인 구축(서버2), 서버1·2 연동 및 코드 병합, Git 브랜치/PR 관리, GitHub 팀 레포 운영, PPT 문서 제작, [README.md](http://README.md) 작성 |
+| **최현화** | 인프라 구축·API 서빙·파이프라인 자동화·레포 관리 | https://github.com/iejob | PRD 설계, 디렉토리 구조 설계, 공통 환경변수/.env 설정, AWS EC2 3대 공통 인프라 구축 , 보안(UFW, SSH, IAM/SG 등), 서버별 툴 설치, 개발환경 표준화,  Docker Compose 서비스 통합 관리,  Docker 서비스 환경변수 관리, 서비스 로그 관리 자동화, FastAPI 기능 추가(서버1), Airflow DAG 기반 파이프라인 구축(서버2), 서버1·2·3 연동 및 코드 병합, Git 브랜치/PR 관리, GitHub 팀 레포 운영, PPT 문서 제작, [README.md](http://README.md) 작성 |
 
 ---
 
