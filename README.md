@@ -364,7 +364,8 @@ mlops-project-mlops-5/
 - FastAPI & React
     -  http://15.164.236.229:8000/docs
     
-        <img width="1093" height="834" alt="15" src="https://github.com/user-attachments/assets/43f1b77e-5000-4682-ac95-1213c8fb5cd8" />
+        <img width="1381" height="694" alt="15" src="https://github.com/user-attachments/assets/4b79d843-193a-4e36-a3ff-389b104bafa1" />
+
     
     - 입력된 콘텐츠 특징을 바탕으로 유사한 콘텐츠를 예측하는 콘텐츠 기반 추천 시스템
         
@@ -406,7 +407,7 @@ mlops-project-mlops-5/
         
     - Airflow DAG 흐름 및 핵심 로직
         
-        <img width="1093" height="834" alt="19" src="https://github.com/user-attachments/assets/ab2964da-8124-4127-801a-23f598f9db34" />
+        <img width="1381" height="694" alt="19" src="https://github.com/user-attachments/assets/16c5ef38-af4b-402a-aa47-e3e8a58add41" />
 
         
         <img width="1264" height="345" alt="20" src="https://github.com/user-attachments/assets/fc1a1417-f266-4fa0-815a-56c5f4cf30c1" />
