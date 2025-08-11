@@ -367,12 +367,9 @@ mlops-project-mlops-5/
 
 - 데이터 수집, 전처리 및 저장
     - 전처리 데이터 저장
-        
-        ⚬로컬 저장: 로그 및 디버깅용
-        
-        ⚬PostgreSQL DB 저장: 학습 및 API 연동을 위한 정형 데이터베이스로 활용
-        
-        ⚬S3 업로드: 장기 보관 및 백업 용도
+        - 로컬 저장: 로그 및 디버깅용
+        - PostgreSQL DB 저장: 학습 및 API 연동을 위한 정형 데이터베이스로 활용
+        - S3 업로드: 장기 보관 및 백업 용도
         
     
     <img width="1401" height="501" alt="7" src="https://github.com/user-attachments/assets/deb08dc1-135d-4f45-928c-03cf8cdce154" />
@@ -383,38 +380,24 @@ mlops-project-mlops-5/
     
 - 모델 학습 및 추론 결과 저장
     - 학습모델: Numpy 기반 MLP (Multi-Layer Perceptron)
-        
-        ⚬ 경량화된 구조로 빠른 학습가능하여 제한된 서버 용량과 짧은 프로젝트 기간 내에 적용하기 적합
-        
-        ⚬ 레이어 구성:
-        
-        ￭Input Layer → Hidden Layer 1 →
-        
-        ￭Hidden Layer 2 →
-        
-        ￭Output Layer (Softmax)
-        
-        ⚬입력 변수: rating, popularity, watch_seconds
-        
-        ⚬출력 변수: content_id (one-hot encoding)
-        
+        - 경량화된 구조로 빠른 학습가능하여 제한된 서버 용량과 짧은 프로젝트 기간 내에 적용하기 적합
+            - 레이어 구성:
+                - Input Layer → Hidden Layer 1 →
+                - Hidden Layer 2 →
+                - Output Layer (Softmax)
+        - 입력 변수: rating, popularity, watch_seconds
+        - 출력 변수: content_id (one-hot encoding)
     - 평가지표: 다중 클래스 분류 모델 평가에 적합한 기준 활용
-        
-        ⚬ Categorical Cross Entropy (CCE)
-        
-        ⚬ Accuracy
-        
+        - Categorical Cross Entropy (CCE)
+        - Accuracy
     
     <img width="879" height="648" alt="9" src="https://github.com/user-attachments/assets/718ef19e-63bb-4203-a591-6419ecaf3314" />
     
 - 모델 학습 및 추론 결과 저장
     - MLflow로 평가 지표 추적 관리
     - 선택 이유
-        
-        ⚬ 실험, 파라미터, 결과, 아티팩트, 레지스트리까지 엔드투엔드 관리
-        
-        ⚬S3/PostgreSQL 등 확장형 백엔드 지원
-        
+        - 실험, 파라미터, 결과, 아티팩트, 레지스트리까지 엔드투엔드 관리
+        - S3/PostgreSQL 등 확장형 백엔드 지원
     
     <img width="1110" height="473" alt="10" src="https://github.com/user-attachments/assets/54c3441a-6283-4829-bac3-7246da2b5049" />
 
@@ -427,13 +410,9 @@ mlops-project-mlops-5/
 
 - 모델 학습 및 추론 결과 저장
     - 추론 결과 저장
-        
-        ⚬로컬 저장: 로그 및 디버깅용
-        
-        ⚬PostgreSQL DB 저장: API 응답 및 웹 시각화를 위한 실시간 조회용
-        
-        ⚬S3 업로드: 장기 보관 및 백업 용도
-        
+        - 로컬 저장: 로그 및 디버깅용
+        - PostgreSQL DB 저장: API 응답 및 웹 시각화를 위한 실시간 조회용
+        - S3 업로드: 장기 보관 및 백업 용도     
     
     <img width="895" height="766" alt="13" src="https://github.com/user-attachments/assets/a8393f2e-65dd-4e25-99f0-584cbeee0e5b" />
     
@@ -441,11 +420,8 @@ mlops-project-mlops-5/
 
 - 모델 배포
     - 학습된 추천 모델을 API로 서빙하고, 프론트엔드에서 추천 결과를 실시간으로 시각화
-        
-        ⚬ FastAPI 서버: 가벼우면서도 비동기 처리가 가능해 실시간 API 서버로 적합
-        
-        ⚬ React 프론트엔드: 사용자 인터랙션 처리 및 컴포넌트 기반 UI 구성에 유리
-        
+        - FastAPI 서버: 가벼우면서도 비동기 처리가 가능해 실시간 API 서버로 적합
+        - React 프론트엔드: 사용자 인터랙션 처리 및 컴포넌트 기반 UI 구성에 유리
     - 주요 FastAPI 엔드포인트
     
     | Method | Endpoint | 설명 |
@@ -517,18 +493,14 @@ mlops-project-mlops-5/
             
     - API 호출 로직 및 에러 처리
         - 공통 함수화
-            
-            ⚬ 모든 API 호출 로직(run_pipeline_task)을 별도 파일
-            
+            - 모든 API 호출 로직(run_pipeline_task)을 별도 파일
         - 에러 처리/검증
+            - 요청 실패, 결과 불일치, HTTP 오류 등 상황별로 AirflowException 발생시켜 자동 재시도
             
-            ⚬ 요청 실패, 결과 불일치, HTTP 오류 등 상황별로 AirflowException 발생시켜 자동 재시도
-            
-            ⚬ /health API로 서버 상태 주기적 체크
+            - /health API로 서버 상태 주기적 체크
             
         - 유지보수성
-            
-            ⚬ 엔드포인트/페이로드/기대 결과만 변경해도 손쉽게 재사용 가능
+            - 엔드포인트/페이로드/기대 결과만 변경해도 손쉽게 재사용 가능
             
     - 장애 상황 처리 예시
         - Server1의 FastAPI 서빙(my-mlops-api)이 미실행 또는 이상 상태일 경우, Airflow DAG의 check_api_health에서 오류 감지 후 파이프라인 중단
@@ -554,17 +526,14 @@ mlops-project-mlops-5/
         
         <img width="934" height="806" alt="22" src="https://github.com/user-attachments/assets/22bcb82e-5f38-4295-8149-c106058080bb" />
 
-        
     - Grafana
         - 다양한 소스에서 수집된 데이터를 통합하고, 대시보드를 통해 시각화
         - Prometheus, Loki 등으로 수집한 데이터를 통해 그래프, 차트, 테이블 등의 형태로 보여주도록 구성
         
         <img width="1751" height="734" alt="23" src="https://github.com/user-attachments/assets/4bb54b72-8090-4e08-9ef1-96910073e4ae" />
 
-        
         <img width="1607" height="901" alt="24" src="https://github.com/user-attachments/assets/8920e05c-1cee-454f-9f56-31dc8757958c" />
 
-        
     - Alertmanager
         - Prometheus가 보낸 경고를 효율적으로 관리하고 사용자에게 전달
         - 로그 패턴: `[Error]`, `[Warning]`
@@ -573,12 +542,10 @@ mlops-project-mlops-5/
             
             <img width="645" height="806" alt="25" src="https://github.com/user-attachments/assets/29fa7ab8-9c00-473e-838e-09414a473954" />
 
-            
             - Slack 메세지 오류 메세지 전달
                 
                 <img width="1091" height="806" alt="26" src="https://github.com/user-attachments/assets/681ce0d2-f234-44f1-a719-7555e06b9db8" />
-
-                
+          
     - Loki
         - 로그 데이터를 수집하고 저장, 검색
         - 레이블 기반으로 효율적인 검색 기능을 지원
@@ -588,9 +555,6 @@ mlops-project-mlops-5/
         
         <img width="2850" height="1620" alt="28" src="https://github.com/user-attachments/assets/8e5351f6-b936-4799-b51e-91d7a90bc37f" />
 
-
-
-        
     - Node-Exporter
         - 서버의 하드웨어 및 OS 지표를 수집하여 Prometheus가 스크랩할 수 있는 형태로 변환
     - Promtail
