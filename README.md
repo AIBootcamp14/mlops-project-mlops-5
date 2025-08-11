@@ -288,11 +288,39 @@ mlops-project-mlops-5/
 
     
 - 모델 학습 및 추론 결과 저장
+    - 학습모델: Numpy 기반 MLP (Multi-Layer Perceptron)
+        
+        ⚬ 경량화된 구조로 빠른 학습가능하여 제한된 서버 용량과 짧은 프로젝트 기간 내에 적용하기 적합
+        
+        ⚬ 레이어 구성:
+        
+        ￭Input Layer → Hidden Layer 1 →
+        
+        ￭Hidden Layer 2 →
+        
+        ￭Output Layer (Softmax)
+        
+        ⚬입력 변수: rating, popularity, watch_seconds
+        
+        ⚬출력 변수: content_id (one-hot encoding)
+        
+    - 평가지표: 다중 클래스 분류 모델 평가에 적합한 기준 활용
+        
+        ⚬ Categorical Cross Entropy (CCE)
+        
+        ⚬ Accuracy
+        
     
     <img width="879" height="648" alt="9" src="https://github.com/user-attachments/assets/718ef19e-63bb-4203-a591-6419ecaf3314" />
-
     
 - 모델 학습 및 추론 결과 저장
+    - MLflow로 평가 지표 추적 관리
+    - 선택 이유
+        
+        ⚬ 실험, 파라미터, 결과, 아티팩트, 레지스트리까지 엔드투엔드 관리
+        
+        ⚬S3/PostgreSQL 등 확장형 백엔드 지원
+        
     
     <img width="1110" height="473" alt="10" src="https://github.com/user-attachments/assets/54c3441a-6283-4829-bac3-7246da2b5049" />
 
@@ -302,30 +330,20 @@ mlops-project-mlops-5/
     
     <img width="1273" height="621" alt="12" src="https://github.com/user-attachments/assets/3e587291-ca2c-4f4e-bce7-ef2420b69e44" />
 
-    
+
 - 모델 학습 및 추론 결과 저장
+    - 추론 결과 저장
+        
+        ⚬로컬 저장: 로그 및 디버깅용
+        
+        ⚬PostgreSQL DB 저장: API 응답 및 웹 시각화를 위한 실시간 조회용
+        
+        ⚬S3 업로드: 장기 보관 및 백업 용도
+        
     
     <img width="895" height="766" alt="13" src="https://github.com/user-attachments/assets/a8393f2e-65dd-4e25-99f0-584cbeee0e5b" />
-
     
     <img width="1497" height="756" alt="14" src="https://github.com/user-attachments/assets/3482b46d-9188-49f7-9cf5-557d8cc9cfd7" />
-
-    
-    - 모델 배포
-        - 학습된 추천 모델을 API로 서빙하고, 프론트엔드에서 추천 결과를 실시간으로 시각화
-            
-            ⚬ FastAPI 서버: 가벼우면서도 비동기 처리가 가능해 실시간 API 서버로 적합
-            
-            ⚬ React 프론트엔드: 사용자 인터랙션 처리 및 컴포넌트 기반 UI 구성에 유리
-            
-        - 주요 FastAPI 엔드포인트
-    
-    | Method | Endpoint | 설명 |
-    | --- | --- | --- |
-    | GET | /available-content-ids | 추천 가능한(학습된) 콘텐츠 ID 목록 조회 |
-    | GET | /available-contents | 추천 가능한(학습된) 콘텐츠 ID, 제목, 포스터 조회 |
-    | GET | /latest-recommendations?k=10 | 가장 최근 추천 결과 k개 조회 (기본 10개, 중복은 제거됨) <br> > React 프론트엔드에 표시되는 값 <br> > 콘텐츠 ID, 제목, 포스터, 줄거리 조회 |
-    | POST | /predict | 단일 사용자 입력에 대한 콘텐츠 추천 <br> > latest-recommendations 값에 업데이트되어 React 프론트엔드에서 새롭게 업데이트 |
 
 - 모델 배포
     - 학습된 추천 모델을 API로 서빙하고, 프론트엔드에서 추천 결과를 실시간으로 시각화
@@ -345,15 +363,11 @@ mlops-project-mlops-5/
     > 콘텐츠 ID, 제목, 포스터, 줄거리 조회 |
     | POST | /predict | 단일 사용자 입력에 대한 콘텐츠 추천
     > latest-recommendations 값에 업데이트되어 React 프론트엔드에서 새롭게 업데이트 |
-- FastAPI & React
-• http://15.164.236.229:8000/docs
-    
-    <img width="1093" height="834" alt="15" src="https://github.com/user-attachments/assets/43f1b77e-5000-4682-ac95-1213c8fb5cd8" />
 
+- FastAPI & React
+    -  http://15.164.236.229:8000/docs
     
-    - React App 시연
-    
-    https://github.com/user-attachments/assets/df210b4e-fe9b-4954-95fc-d42d0cbe26b0
+        <img width="1093" height="834" alt="15" src="https://github.com/user-attachments/assets/43f1b77e-5000-4682-ac95-1213c8fb5cd8" />
     
     - 입력된 콘텐츠 특징을 바탕으로 유사한 콘텐츠를 예측하는 콘텐츠 기반 추천 시스템
         
