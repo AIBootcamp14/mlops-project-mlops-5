@@ -34,14 +34,100 @@
 
 ## **2. 활용 장비 및 협업 툴**
 
-### **2.1 활용 장비**
-
-- **서버:** AWS EC2 3대 (Ubuntu 24.04)
-    - 서버1(mlops-workhorse): 데이터/모델링/서빙
-    - 서버2(mlops-controltower): 자동화 파이프라인
-    - 서버3(mlops-nervous): 모니터링/로깅
-- **개발환경:** 도커, pyenv, Git, UFW, SSH Key 등
-- **테스트 장비:** 각 팀원 노트북 (Windows/Mac/Linux)
+- **개발환경:**
+    - **컨테이너 런타임**: Docker Engine (v27.2.0), Docker Compose (v2.38.2)
+    - **파이썬 환경관리**: Pyenv (Python v3.11.9)
+    - **버전관리**: Git (GitHub 팀 레포·개인 포크 기반 브랜치 전략)
+    - **보안/운영 요약**:
+        - 최소 개방 원칙: 외부에는 React(3000, 운영자 IP), Grafana(3000, 운영자 IP), Airflow(8080, 운영자 IP), Prometheus(9090, 운영자 IP) 등 필수 서비스만 제한 허용
+        - FastAPI(8000), PostgreSQL(5432), Loki(3100) 등은 VPC 내부 또는 보안 그룹 간(ID) 통신만 허용
+        - UFW로 OS 레벨 이중 방어(기본 deny), SSH(22)는 키 인증 기반, 루트 접속 차단
+        - SSH(22)는 **키 인증 기반, 비밀번호 로그인 차단, 루트 접속 금지, 변경 이력 백업/관리 적용**
+    - **배포환경 구성**: 각 서버별 Docker Compose 통합 실행 구조(최상위 docker-compose.yml에 모든 서비스 환경변수 정의 후 일괄 기동)
+    - **공통 인프라 구성요소**: OS 보안설정(Ubuntu 22.04 LTS), VPC/보안그룹 설정, IAM Role, 인바운드 포트 최소 개방 정책
+    - **데이터·모델 저장소**: PostgreSQL, AWS S3, MLflow Tracking 서버
+- **테스트 장비:**
+    - **팀원 로컬 환경**: Windows 10/11, macOS Sonoma, Ubuntu Linux(데스크톱) 혼합 환경
+    - **로컬 실행 테스트**: Docker Desktop 또는 Podman 기반 컨테이너 실행, 로컬 Pyenv 환경에서 API/모델 단위 테스트
+    - **원격 서버 테스트**: AWS EC2 (각 서버별 독립 인스턴스) 접속 후 서비스 기동/검증, Airflow DAG 트리거 테스트, Grafana 대시보드 확인
+- **협업 방식 / 브랜치 전략**
+    - **서버:** AWS EC2 3대 (Ubuntu 24.04)
+        - **Server1 (workhorse)**:
+            - **브랜치명**: `server1-workhorse-mlops-fastapi`
+            - **역할**: 데이터 수집/적재, 모델 학습 및 추론 API 서빙, 프론트엔드 제공
+            - **도커 서비스 구성**
+                1. **데이터·API·모델 서비스**
+                    - `my-mlops-api` : FastAPI 기반 모델 추론 API 서버. Airflow 및 프론트엔드에서 호출.
+                    - `my-mlops-db` : PostgreSQL 데이터베이스. 원본 데이터, 가공 데이터, 추론 결과 저장.
+                    - `my-mlops-frontend` : React 기반 사용자 UI 서비스. 영화 추천 페이지 제공.
+                    - `my-mlops-model` : 모델 로딩 및 예측 전용 서비스(서빙 환경 독립).
+                2. **모니터링 클라이언트**
+                    - `node-exporter` : 서버 OS/하드웨어 메트릭(CPU, 메모리, 디스크, 네트워크) 수집.
+                    - `promtail` : 로컬 `.log` 파일 수집 → Loki로 전송. `[Error]`, `[Warning]` 키워드 파싱.
+        - **Server2 (controltower)**
+            - **브랜치명**: `server2-controltower-mlops-automated-pipeline`
+            - **역할**: Airflow 기반 데이터 처리·모델 학습·추론 자동화 파이프라인 관리
+            - **도커 서비스 구성**
+                1. **Airflow 자동화 파이프라인**
+                    - `webserver` : Airflow 웹 UI 제공. DAG 관리·실행 상태 모니터링.
+                    - `scheduler` : DAG 스케줄링 및 태스크 실행 트리거.
+                    - `postgres` : Airflow 메타데이터 저장용 PostgreSQL.
+                    - `airflow-init` : 초기 DB 마이그레이션, 계정 생성, 환경 설정 수행.
+                2. **모니터링 클라이언트**
+                    - `node-exporter` : 서버 메트릭 수집.
+                    - `promtail` : 로그 수집 및 특정 패턴 필터링 후 Loki 전송.
+        - **Server3 (nervous)**
+            - **브랜치명**: `server3-nervous-mlops-monitoring`
+            - **역할**: 서버 및 애플리케이션 모니터링·로그 관리·알림 시스템 운영
+            - **도커 서비스 구성**
+                1. **모니터링 서버**
+                    - `prometheus` : 서버1·2·3 메트릭 수집·저장.
+                    - `alertmanager` : Prometheus 알림 규칙 기반 Slack 등으로 알람 발송.
+                    - `grafana` : 메트릭·로그 대시보드 시각화.
+                    - `loki` : 로그 집계·검색 시스템.
+    - **팀 레포 브랜치 구성**
+        - `main` : 최종 배포 브랜치.
+            - 깔끔한 구조를 위해 **각 서버별 폴더(server1, server2, server3)** 형태로 최상위 디렉토리에 배치.
+        - `develop` : 서버별 브랜치 작업물을 모아 병합 테스트하는 브랜치.
+            - **각 서버별 폴더(server1, server2, server3)** 하위에 각 서버 기능별 코드 배치.
+        - 서버별 브랜치 (`server1-workhorse`, `server2-controltower`, `server3-nervous`) :
+            - **실제 서버에서 클론받아 바로 실행하는 전용 브랜치**.
+            - 각 서버 환경에 맞춘 실행/환경설정이 포함됨.
+    - **개인 작업 브랜치 네이밍 규칙**
+        1. 초기: `feature-<서버명>-<기능명>`
+            
+            예) `feature-workhorse-fastapi`, `feature-controltower-data-ingest`
+            
+        2. 이후: `server<번호>-<서버명>-<기능명>`
+            
+            예) `server1-workhorse-fastapi`, `server2-controltower-automated-pipeline`
+            
+        3. 팀 단위 병합용: `team-server<번호>-<서버명>-<기능명>`
+            
+            예) `team-server1-workhorse-fastapi`
+            
+    - **작업 흐름**
+        1. **팀 레포 fork → 개인 레포 clone**
+        2. 개인 작업 브랜치 생성 (네이밍 규칙 준수)
+        3. 기능 구현/커밋 후 PR 생성
+        4. PR은 해당 서버별 브랜치로 병합
+        5. 서버별 브랜치를 `develop`에 병합해 통합 테스트
+        6. 검증 완료 후 `main`으로 최종 병합
+    - **실행 시 주의사항**
+        - **`main` 브랜치는 실행용이 아님**.
+        - 각 서버 환경에서 **해당 서버 전용 브랜치**(`server1-*`, `server2-*`, `server3-*`)를 직접 클론받아 사용해야 함.
+        - 예:
+            
+            ```bash
+            # 서버1 실행 환경
+            git clone -b server1-workhorse-mlops-fastapi <팀 레포 주소>
+            
+            # 서버2 실행 환경
+            git clone -b server2-controltower-mlops-automated-pipeline <팀 레포 주소>
+            
+            # 서버3 실행 환경
+            git clone -b server3-nervous-mlops-monitoring <팀 레포 주소>
+            ```
 
 ### **2.2 협업 툴**
 
@@ -217,6 +303,10 @@ mlops-project-mlops-5/
     ```
     
 2. **Docker Compose 실행 (각 서버별)**
+    - Frontend 런타임 환경 주입
+        - `scripts/utils/create_env_js.sh` 실행 → `frontend/public/env.js` 생성
+        - 키 예시:
+            - **`REACT_APP_API_ENDPOINT`**: `http://<SERVER1_IP>:3000`
     - 서버 1
         
         ```bash
@@ -261,9 +351,12 @@ mlops-project-mlops-5/
         ```
         
 3. **웹페이지 접속:**
+    
+    > 프론트는 3000 포트, Airflow가 호출하는 FastAPI는 8000 포트(내부 호출) 사용
+   
     - 서버1: 사용자 페이지
         - 사용자 영화 추천 페이지: http://<서버1 IP>:3000/
-        - FastAPI: http://<서버1 IP>:3000/
+        - FastAPI: http://<서버1 IP>:8000/
     - 서버2: Airflow Dag 파이프라인 자동화 실행
         - Airflow: http://<서버2 IP>:8080/
     - 서버3 : 모니터링
@@ -386,20 +479,18 @@ mlops-project-mlops-5/
         
 - Airflow 자동화 파이프라인
     - 목적:
-        
-        ⚬ 데이터 수집, 모델 학습, 추론 등 전체 ML 파이프라인을 Airflow 기반 자동화 파이프라인으로 운영
-        
+        - 데이터 수집, 모델 학습, 추론 등 전체 ML 파이프라인을 Airflow 기반 자동화 파이프라인으로 운영
     - 구성:
-        
-        ⚬ Airflow가 정해진 주기(예: 하루 1번 00:00시) 마다 서버1 (FastAPI)의 각 단계별 엔드포인트를 자동 호출
-        
+        - Airflow가 정해진 주기(예: 하루 1번 00:00시) 마다 서버1 (FastAPI)의 각 단계별 엔드포인트를 자동 호출
+        - 호출 순서: `/health` → `run/prepare-data` → `run/train` → `run/model-inference`
+        - 스케줄: (예) `/20 * * * *` ← 실제 운영값으로 기재
+        - 재시도: 각 태스크 최대 5회
+        - 타임아웃: `run/train` 3600초, 나머지 300초
+        - 필수 환경 변수: `SERVER_1_IP` (미설정 시 DAG 로드 실패)
     - 주요 장점:
-        
-        ⚬ 반복/수동작업 최소화
-        
-        ⚬ 신속한 파이프라인 재실행
-        
-        ⚬ 장애 시 자동 재시도
+        - 반복/수동작업 최소화
+        - 신속한 파이프라인 재실행
+        - 장애 시 자동 재시도
         
     - Airflow DAG 흐름 및 핵심 로직
         
@@ -418,7 +509,7 @@ mlops-project-mlops-5/
     4. 배치 추론
         - run_batch_inference_task: 모델 추론/예측
     5. 태스크 간 의존성
-        - 상태 체크 → 데이터 준비 → 모델 학습 → 배치 추론 순서로 동작
+        - 호출 순서: `/health` → `run/prepare-data` → `run/train` → `run/model-inference`
     - 코드 주요점
         - 각 태스크에서 실패 시 최대 5회 재시도
         - 태스크별 타임아웃/오류 관리
@@ -475,6 +566,9 @@ mlops-project-mlops-5/
         
     - Alertmanager
         - Prometheus가 보낸 경고를 효율적으로 관리하고 사용자에게 전달
+        - 로그 패턴: `[Error]`, `[Warning]`
+        - (예시) LogQL: `{job="app"} |= "[Error]"` → Grafana에서 오류 건수 패널로 시각화
+        - Alert 예시: 5분간 `[Error]` 5건 이상 발생 시 Slack 알림
             
             <img width="645" height="806" alt="25" src="https://github.com/user-attachments/assets/29fa7ab8-9c00-473e-838e-09414a473954" />
 
