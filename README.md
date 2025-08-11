@@ -409,32 +409,19 @@ mlops-project-mlops-5/
         <img width="1264" height="345" alt="20" src="https://github.com/user-attachments/assets/fc1a1417-f266-4fa0-815a-56c5f4cf30c1" />
 
         
-        1. API 서버 상태 확인
-        
-        ⚬ PythonSensor로 FastAPI /health 엔드포인트 상태 확인
-        
-        2. 데이터 준비
-        
-        ⚬ run_prepare_data_task: 데이터 수집/전처리
-        
-        - 3. 모델 학습
-            
-            ⚬ run_train_task: 모델 학습
-            
-        
-        4. 배치 추론
-        
-        ⚬ run_batch_inference_task: 모델 론/예측
-        
-        5. 태스크 간 의존성
-        
-        ⚬ 상태 체크 → 데이터 준비 → 모델 학습 → 배치 추론 순서로 동작
-        
-        - 코드 주요점
-            
-            ⚬ 각 태스크에서 실패 시 최대 5회 재시도
-            
-            ⚬ 태스크별 타임아웃/오류 관리
+    1. API 서버 상태 확인
+        - PythonSensor로 FastAPI /health 엔드포인트 상태 확인
+    2. 데이터 준비
+        - run_prepare_data_task: 데이터 수집/전처리
+    3. 모델 학습
+        - run_train_task: 모델 학습
+    4. 배치 추론
+        - run_batch_inference_task: 모델 추론/예측
+    5. 태스크 간 의존성
+        - 상태 체크 → 데이터 준비 → 모델 학습 → 배치 추론 순서로 동작
+    - 코드 주요점
+        - 각 태스크에서 실패 시 최대 5회 재시도
+        - 태스크별 타임아웃/오류 관리
             
     - API 호출 로직 및 에러 처리
         - 공통 함수화
